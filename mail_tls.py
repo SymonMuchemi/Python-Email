@@ -39,9 +39,9 @@ msg.attach(MIMEText(msg_body, "plain"))
 
 try:
     server = smtplib.SMTP(smtp_server, port=port)
-    server.ehlo()
+    # server.ehlo()
     server.starttls(context=context)
-    server.ehlo()
+    # server.ehlo()
     server.login(sender_gmail, password=password)
     server.sendmail(sender_gmail, email_recepient, msg.as_string())
 except Exception as e:
