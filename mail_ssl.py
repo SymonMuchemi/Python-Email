@@ -13,15 +13,17 @@ sender_gmail = os.getenv("GMAIL_USERNAME")
 recepient_gmail = sys.argv[1]
 subject = "Test Message from Muchemi"
 body = """
-Obama Inaugural Address
-20th January 2009
-
-My fellow citizens:
-I stand here today humbled by the task before us, grateful for the trust you have bestowed, mindful of the sacrifices borne by our ancestors. I thank President Bush for his service to our nation, as well as the generosity and cooperation he has shown throughout this transition.
-Forty-four Americans have now taken the presidential oath. The words have been spoken during rising tides of prosperity and the still waters of peace. Yet, every so often the oath is taken amidst gathering clouds and raging storms. At these moments, America has carried on not simply because of the skill or vision of those in high office, but because We the People have remained faithful to the ideals of our forbearers, and true to our founding documents.
-So it has been. So it must be with this generation of Americans.
-
-Thank you. God bless you and God bless the United States of America.
+<html>
+  <body>
+    <h1>Obama Inaugural Address</h1>
+    <p><i>20th January 2009</i></p>
+    <p>My fellow citizens:</p>
+    <p>I stand here today humbled by the task before us, grateful for the trust you have bestowed, mindful of the sacrifices borne by our ancestors. I thank President Bush for his service to our nation, as well as the generosity and cooperation he has shown throughout this transition.</p>
+    <p>Forty-four Americans have now taken the presidential oath. The words have been spoken during rising tides of prosperity and the still waters of peace. Yet, every so often the oath is taken amidst gathering clouds and raging storms. At these moments, America has carried on not simply because of the skill or vision of those in high office, but because We the People have remained faithful to the ideals of our forbearers, and true to our founding documents.</p>
+    <p>So it has been. So it must be with this generation of Americans.</p>
+    <p>Thank you. God bless you and God bless the United States of America.</p>
+  </body>
+</html>
 """
 
 
