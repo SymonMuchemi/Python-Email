@@ -14,7 +14,9 @@ recepient_gmail = sys.argv[1]
 subject = "Test Message from Muchemi"
 body = """
 <html>
-  <body>
+  <body style={
+    background: red;
+    }>
     <h1>Obama Inaugural Address</h1>
     <p><i>20th January 2009</i></p>
     <p>My fellow citizens:</p>
@@ -31,7 +33,7 @@ msg = MIMEMultipart()
 msg["From"] = sender_gmail
 msg["To"] = recepient_gmail
 msg["Subject"] = subject
-msg.attach(MIMEText(body, "plain"))
+msg.attach(MIMEText(body, "html"))
 
 
 # Create secure ssl context
