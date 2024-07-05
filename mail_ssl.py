@@ -1,7 +1,9 @@
 import smtplib, ssl
 import os, sys
 from dotenv import load_dotenv
+from email import encoders
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
 load_dotenv()
@@ -14,10 +16,8 @@ recepient_gmail = sys.argv[1]
 subject = "Test Message from Muchemi"
 body = """
 <html>
-  <body style={
-    background: red;
-    }>
-    <h1>Obama Inaugural Address</h1>
+  <body>
+    <h1 style={background: yellow;}>Obama Inaugural Address</h1>
     <p><i>20th January 2009</i></p>
     <p>My fellow citizens:</p>
     <p>I stand here today humbled by the task before us, grateful for the trust you have bestowed, mindful of the sacrifices borne by our ancestors. I thank President Bush for his service to our nation, as well as the generosity and cooperation he has shown throughout this transition.</p>
@@ -35,6 +35,24 @@ msg["To"] = recepient_gmail
 msg["Subject"] = subject
 msg.attach(MIMEText(body, "html"))
 
+# attaching files to the email
+filename = "car-photo.jpg"
+
+# open the file in binary mode
+with open(filename, 'rb') as attachment:
+  part = MIMEBase("application", "octet-stream")
+  part.set_payload(attachment.read())
+  
+# encode the file to base64
+encoders.encode_base64(part)
+
+# add headers to the attachment part
+part.add_header(
+  "Content-Disposition",
+  f"attachement; filename= {filename}",
+)
+
+msg.attach(part)
 
 # Create secure ssl context
 context = ssl.create_default_context()
