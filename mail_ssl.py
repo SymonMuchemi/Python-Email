@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
-load_dotenv()
+load_dotenv('./config/config.env')
 
 port = 465  # using SMTP_SSL()
 password = os.getenv("GMAIL_PWD")
