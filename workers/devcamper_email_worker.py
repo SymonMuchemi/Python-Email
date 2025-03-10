@@ -46,7 +46,7 @@ def send_email(address, subject, body):
 while True:
     try:
         messages = redis_client.xreadgroup(
-            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: 0}, count=1, block=5000
+            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: ">"}, count=1, block=5000
         )
 
         if not messages:
