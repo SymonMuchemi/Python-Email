@@ -46,7 +46,7 @@ def send_email(address, subject, body):
 while True:
     try:
         messages = redis_client.xreadgroup(
-            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: ">"}, count=1, block=5000
+            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: 0}, count=1, block=5000
         )
 
         if not messages:
@@ -58,7 +58,6 @@ while True:
                 print(f"Length of messages: {len(msg_list)}")
                 for msg_id, msg in msg_list:
                     print(f'message: {msg_id}, email: {msg["email"]}')
-                    print(f"Type of message: {type(msg)}")
                     send_email(msg["email"], msg["subject"], msg["body"])
                     redis_client.xack(STREAM_NAME, GROUP_NAME, msg_id)
     except Exception as e:
