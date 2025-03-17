@@ -1,8 +1,7 @@
-import time
-import redis
-import os
+import time, redis, os
 import ssl, smtplib
 from dotenv import load_dotenv
+from logger.loggger import logger
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -25,8 +24,7 @@ SENDER_EMAIL = os.getenv("GMAIL_USERNAME")
 PASSWORD = os.getenv("GMAIL_PWD")
 PORT = 465
 
-
-def send_email(address, subject, body):
+def send_email(address, subject, body) -> None:
     msg = MIMEMultipart()
     msg["from"] = SENDER_EMAIL
     msg["to"] = address
@@ -39,8 +37,7 @@ def send_email(address, subject, body):
         server.login(SENDER_EMAIL, PASSWORD)
         server.sendmail(SENDER_EMAIL, address, msg.as_string())
 
-        # TODO: use logger instead
-        print("Email sent successfully")
+        logger.info(f'Email sent to {address} successfully!')
 
 
 while True:
@@ -50,15 +47,12 @@ while True:
         )
 
         if not messages:
-            print("waiting for messages...")
             time.sleep(3)
 
         if messages:
             for stream, msg_list in messages:
                 for msg_id, msg in msg_list:
-                    print(f'message: {msg_id}, email: {msg["email"]}')
-                    response = send_email(msg["email"], msg["subject"], msg["body"])
-                    print(response)
+                    logger.info(f'Processing message: {msg_id}, email: {msg["email"]}')
                     redis_client.xack(STREAM_NAME, GROUP_NAME, msg_id)
     except Exception as e:
-        print(f"Error reading message: {e}")
+        logger.error(f"Error reading message: {e}")

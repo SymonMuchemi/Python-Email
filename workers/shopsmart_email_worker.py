@@ -1,8 +1,7 @@
-import time
-import redis
-import os
+import time, redis, os
 import ssl, smtplib
 from dotenv import load_dotenv
+from logger.loggger import logger
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -13,7 +12,7 @@ STREAM_NAME = "shopsmart:mail"
 GROUP_NAME = "shopsmart:mail_group"
 CONSUMER_NAME = "alpha"
 
-load_dotenv("../config/config.env")
+load_dotenv()
 
 # Create consumer group
 try:
@@ -39,14 +38,13 @@ def send_email(address, subject, body):
         server.login(SENDER_EMAIL, PASSWORD)
         server.sendmail(SENDER_EMAIL, address, msg.as_string())
 
-        # TODO: use logger instead
-        print("Email sent successfully")
+        logger.info(f'Email sent to {address} successfully!')
 
 
 while True:
     try:
         messages = redis_client.xreadgroup(
-            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: 0}, count=1, block=5000
+            GROUP_NAME, CONSUMER_NAME, {STREAM_NAME: ">"}, count=1, block=5000
         )
 
         if not messages:
@@ -55,7 +53,7 @@ while True:
         if messages:
             for stream, msg_list in messages:
                 for msg_id, msg in msg_list:
-                    print(f'message: {msg_id}, email: {msg["email"]}')
+                    logger.info(f'Processing message: {msg_id}, email: {msg["email"]}')
                     send_email(msg["email"], msg["subject"], msg["body"])
                     redis_client.xack(STREAM_NAME, GROUP_NAME, msg_id)
     except Exception as e:
