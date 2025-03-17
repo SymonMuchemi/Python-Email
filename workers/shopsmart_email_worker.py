@@ -50,12 +50,10 @@ while True:
         )
 
         if not messages:
-            print("waiting for messages...")
             time.sleep(3)
 
         if messages:
             for stream, msg_list in messages:
-                print(f"Length of messages: {len(msg_list)}")
                 for msg_id, msg in msg_list:
                     print(f'message: {msg_id}, email: {msg["email"]}')
                     send_email(msg["email"], msg["subject"], msg["body"])
