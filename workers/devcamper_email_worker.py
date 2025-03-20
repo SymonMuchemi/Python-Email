@@ -1,18 +1,23 @@
 import time, redis, os
 import ssl, smtplib
 from dotenv import load_dotenv
-from logger.loggger import logger
+from logger.logger import logger
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # create redis client
 redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
 
-STREAM_NAME = "devcamper:mail"
-GROUP_NAME = "devcamper:mail_group"
-CONSUMER_NAME = "alpha"
-
 load_dotenv()
+
+STREAM_NAME = os.getenv("STREAM_NAME")
+GROUP_NAME = os.getenv("GROUP_NAME")
+CONSUMER_NAME = os.getenv("CONSUMER_NAME")
+
+SENDER_EMAIL = os.getenv("GMAIL_USERNAME")
+PASSWORD = os.getenv("GMAIL_PWD")
+GMAIL_HOST = os.getenv("GMAIL_HOST")
+PORT = os.getenv("PORT")
 
 # Create consumer group
 try:
@@ -20,9 +25,6 @@ try:
 except Exception as e:
     pass
 
-SENDER_EMAIL = os.getenv("GMAIL_USERNAME")
-PASSWORD = os.getenv("GMAIL_PWD")
-PORT = 465
 
 def send_email(address, subject, body) -> None:
     msg = MIMEMultipart()
@@ -33,11 +35,11 @@ def send_email(address, subject, body) -> None:
 
     context = ssl.create_default_context()
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", port=PORT, context=context) as server:
+    with smtplib.SMTP_SSL(GMAIL_HOST, port=PORT, context=context) as server:
         server.login(SENDER_EMAIL, PASSWORD)
         server.sendmail(SENDER_EMAIL, address, msg.as_string())
 
-        logger.info(f'Email sent to {address} successfully!')
+        logger.info(f"Email sent to {address} successfully!")
 
 
 while True:
